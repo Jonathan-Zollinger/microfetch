@@ -1,0 +1,44 @@
+plugins {
+    id("groovy") 
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.2.0"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
+}
+
+version = "0.1"
+group = "com.github.jonathan.zollinger"
+
+apply from: "gradle/asciidoc.gradle"
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("info.picocli:picocli-codegen")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("info.picocli:picocli")
+    implementation("io.micronaut.picocli:micronaut-picocli")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    runtimeOnly("org.slf4j:slf4j-simple")
+}
+
+
+application {
+    mainClass.set("com.github.jonathan.zollinger.MicrofetchCommand")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+
+micronaut {
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("com.github.jonathan.zollinger.*")
+    }
+}
+
+
+

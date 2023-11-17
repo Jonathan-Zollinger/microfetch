@@ -1,0 +1,6 @@
+applicationType: cli
+defaultPackage: com.github.jonathan.zollinger
+testFramework: spock
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, asciidoctor, github-workflow-ci, graalvm, gradle, http-client-test, java, micronaut-build, picocli, picocli-java-application, picocli-spock, properties, readme, serialization-jackson, shade, slf4j-simple, spock]
