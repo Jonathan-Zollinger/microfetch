@@ -1,28 +1,31 @@
 package com.github.jonathan.zollinger;
 
 import io.micronaut.configuration.picocli.PicocliRunner;
-import io.micronaut.context.ApplicationContext;
-
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
+
+import java.util.Map;
 
 @Command(name = "microfetch", description = "...",
         mixinStandardHelpOptions = true)
 public class MicrofetchCommand implements Runnable {
 
-    @Option(names = {"-v", "--verbose"}, description = "...")
-    boolean verbose;
+    @Inject
+    Stats stats;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         PicocliRunner.run(MicrofetchCommand.class, args);
     }
 
     public void run() {
-        // business logic here
-        if (verbose) {
-            System.out.println("Hi!");
+        Map<String, String> properties = stats.getPrintOut();
+    }
+
+
+    public static class ManifestVersionProvider implements CommandLine.IVersionProvider {
+        public String[] getVersion() {
+            return new String[]{MicrofetchCommand.class.getPackage().getImplementationVersion()};
         }
     }
 }

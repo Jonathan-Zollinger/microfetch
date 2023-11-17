@@ -5,7 +5,7 @@ plugins {
     id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
-version = "0.1"
+version = "0.0.0-SNAPSHOT"
 group = "com.github.jonathan.zollinger"
 
 apply from: "gradle/asciidoc.gradle"
@@ -14,12 +14,13 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("info.picocli:picocli-codegen")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    implementation("info.picocli:picocli")
-    implementation("io.micronaut.picocli:micronaut-picocli")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    runtimeOnly("org.slf4j:slf4j-simple")
+    annotationProcessor "info.picocli:picocli-codegen"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
+    implementation "com.github.oshi:oshi-core:6.4.4"
+    implementation "info.picocli:picocli"
+    implementation "io.micronaut.picocli:micronaut-picocli"
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    implementation "org.slf4j:slf4j-nop"
 }
 
 
