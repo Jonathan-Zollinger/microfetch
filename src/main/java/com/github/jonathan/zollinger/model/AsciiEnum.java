@@ -2,34 +2,16 @@ package com.github.jonathan.zollinger.model;
 
 import lombok.Getter;
 import org.fusesource.jansi.Ansi.Color;
+import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine;
 
+import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Getter
-public class AsciiArt {
-    private final String art;
-
-    public AsciiArt(AsciiEnum art, Color... colors) {
-        if (findColorCount(art) > colors.length) {
-            throw new CommandLine.PicocliException(String.format("color scheme provided (%s colors) " +
-                            "doesn't match the color count required (%s colors) " +
-                            "by the ascii image below:\\n%s" ,
-                    colors.length, findColorCount(art), art));
-        }
-        this.art = String.format(art.distroArt, Arrays.stream(colors).map(String::valueOf).toArray());
-    }
-
-
-    private int findColorCount(AsciiEnum asciiArt) {
-        Matcher matcher = Pattern.compile("%(\\d+)\\$s").matcher(asciiArt.toString());
-        if (matcher.find()) {
-            return Math.max(Integer.parseInt(matcher.group(0)), 1);
-        }
-        return 1;
-    }
+import static org.fusesource.jansi.Ansi.ansi;
 
     public enum AsciiEnum {
         AIX("""
@@ -53,7 +35,7 @@ h//NNNNh  ossss` +h  md- .hm/ `sNNNNN:+y
       :ys:/yNNNNNNNNNNNNNNNmy/:sy:
         .+ys///osyhhhhys+///sy+.
             -/osssossossso/-
-"""),
+""", new Color[]{Color.GREEN}),
 
         ALMALINUX("""
 ${c1}         'c:.
@@ -4961,9 +4943,81 @@ ssssssssssssso/-`      `-/osssssssssssss
 """);
 
         final String distroArt;
+        Pattern interpolator = Pattern.compile("\\$\\{c(\\d+)\\}");
+        Color[] palette = new Color[] {
+                Color.GREEN,
+                Color.BLUE,
+                Color.CYAN,
+                Color.YELLOW,
+                Color.MAGENTA
+        };
 
+        AsciiEnum(String distroArt, Color[] palette) {
+            this.distroArt = distroArt;
+            setPalette(palette);
+        }
         AsciiEnum(String distroArt) {
             this.distroArt = distroArt;
         }
+
+        public int getColorCount() {
+            Matcher matcher = interpolator.matcher(distroArt.toString());
+            int distroColorDemand = 1;
+            while(matcher.find()){
+                int palettePosition = Integer.parseInt(matcher.group(1));
+                if (distroColorDemand < palettePosition) {
+                    distroColorDemand = palettePosition;
+                }
+            }
+            return 1;
         }
-}
+
+        public void setPalette(Color[] palette){
+            Matcher matcher = interpolator.matcher(distroArt.toString());
+            if (palette.length < getColorCount()){
+                throw new CommandLine.PicocliException("color palette doesn't have enough colors for distro-art");
+            }
+            this.palette = palette;
+        }
+
+        @Override
+        public String toString(){
+            AnsiConsole.systemInstall();
+            Matcher matcher = interpolator.matcher(distroArt.toString());
+            StringBuilder sb = new StringBuilder();
+            Color currentColor = this.palette[0];
+            String[] separatedArt = distroArt.split(interpolator.toString());
+            for (int i = 0; i < matcher.groupCount(); i++) {
+                try{
+                    currentColor = palette[Integer.parseInt(matcher.group(i))];
+                }catch (IllegalStateException ignored){
+
+                }
+                sb.append(ansi()
+                        .fg(currentColor)
+                        .a(separatedArt[i + 1])
+                );
+            }
+            return sb.toString();
+        }
+
+        public void render() {
+            Matcher matcher = interpolator.matcher(distroArt.toString());
+            Color currentColor = this.palette[0];
+            String[] separatedArt = distroArt.split(interpolator.toString());
+            for (int i = 0; i < matcher.groupCount(); i++) {
+                try{
+                    currentColor = palette[Integer.parseInt(matcher.group(i))];
+                }catch (IllegalStateException ignored){
+
+                }
+                AnsiConsole.systemInstall();
+                final PrintStream output = AnsiConsole.out();
+
+                output.println(ansi()
+                        .fgBrightGreen()
+                        .a(separatedArt[i + 1]).reset());
+            }
+            AnsiConsole.systemUninstall();
+        }
+    }
