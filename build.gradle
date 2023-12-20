@@ -12,6 +12,10 @@ apply from: 'gradle/asciidoc.gradle'
 repositories {
     mavenCentral()
 }
+apply plugin: 'java'
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'ISO-8859-1'
+}
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.28'
@@ -22,17 +26,17 @@ dependencies {
     implementation 'io.micronaut.picocli:micronaut-picocli'
     implementation 'io.micronaut.serde:micronaut-serde-jackson'
     runtimeOnly 'org.slf4j:slf4j-simple'
-    implementation 'org.fusesource.jansi:jansi:2.4.1'}
-
+    implementation 'org.fusesource.jansi:jansi'
+}
 
 application {
-    mainClass.set('com.github.jonathan.zollinger.MicrofetchCommand')
+    mainClass.set('com.github.jonathan.zollinger.Application')
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion('17')
     targetCompatibility = JavaVersion.toVersion('17')
 }
-
 
 micronaut {
     testRuntime('spock2')
