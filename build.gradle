@@ -21,12 +21,11 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'info.picocli:picocli-codegen'
     annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
-    implementation 'org.fusesource.jansi:jansi:1.18'
     implementation 'info.picocli:picocli'
     implementation 'io.micronaut.picocli:micronaut-picocli'
     implementation 'io.micronaut.serde:micronaut-serde-jackson'
     runtimeOnly 'org.slf4j:slf4j-simple'
-    implementation 'org.fusesource.jansi:jansi'
+    implementation 'com.diogonunes:JColor:5.5.1'
 }
 
 application {

@@ -2,7 +2,6 @@ package com.github.jonathan.zollinger;
 
 import com.github.jonathan.zollinger.model.AsciiEnum;
 import io.micronaut.configuration.picocli.PicocliRunner;
-import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -17,8 +16,6 @@ public class Application implements Runnable {
     }
 
     public void run() {
-        AnsiConsole.systemInstall();
-        AsciiEnum.ALPINE.render();
-        AnsiConsole.systemUninstall();
+        System.out.println(AsciiEnum.ALPINE);
     }
 }
