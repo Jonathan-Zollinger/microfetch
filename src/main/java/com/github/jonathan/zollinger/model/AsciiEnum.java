@@ -1,19 +1,17 @@
 package com.github.jonathan.zollinger.model;
 
-import lombok.Getter;
-import org.fusesource.jansi.Ansi.Color;
-import org.fusesource.jansi.AnsiConsole;
+import com.diogonunes.jcolor.Attribute;
 import picocli.CommandLine;
 
-import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static org.fusesource.jansi.Ansi.ansi;
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static com.diogonunes.jcolor.Attribute.*;
 
-    public enum AsciiEnum {
+public enum AsciiEnum {
         AIX("""
 ${c1}           `:+ssssossossss+-`
         .oys///oyhddddhyo///sy+.
@@ -35,9 +33,9 @@ h//NNNNh  ossss` +h  md- .hm/ `sNNNNN:+y
       :ys:/yNNNNNNNNNNNNNNNmy/:sy:
         .+ys///osyhhhhys+///sy+.
             -/osssossossso/-
-""", new Color[]{Color.GREEN}),
+""", new Attribute[][]{new Attribute[]{GREEN_TEXT()}}),
 
-        ALMALINUX("""
+        ALMA_LINUX("""
 ${c1}         'c:.
 ${c1}        lkkkx, ..       ${c2}..   ,cc,
 ${c1}        okkkk:ckkx'  ${c2}.lxkkx.okkkkd
@@ -4943,16 +4941,19 @@ ssssssssssssso/-`      `-/osssssssssssss
 """);
 
         final String distroArt;
-        Pattern interpolator = Pattern.compile("\\$\\{c(\\d+)\\}");
-        Color[] palette = new Color[] {
-                Color.GREEN,
-                Color.BLUE,
-                Color.CYAN,
-                Color.YELLOW,
-                Color.MAGENTA
+        final Pattern interpolator = Pattern.compile("\\$\\{c(\\d+)}");
+
+        static int paletteSelection = 0;
+        Attribute[][] palette = new Attribute[][] {
+                new Attribute[]{RED_TEXT()},
+                new Attribute[]{GREEN_TEXT()},
+                new Attribute[]{BLUE_TEXT()},
+                new Attribute[]{CYAN_TEXT()},
+                new Attribute[]{YELLOW_TEXT()},
+                new Attribute[]{MAGENTA_TEXT()}
         };
 
-        AsciiEnum(String distroArt, Color[] palette) {
+        AsciiEnum(String distroArt, Attribute[][] palette) {
             this.distroArt = distroArt;
             setPalette(palette);
         }
@@ -4961,7 +4962,7 @@ ssssssssssssso/-`      `-/osssssssssssss
         }
 
         public int getColorCount() {
-            Matcher matcher = interpolator.matcher(distroArt.toString());
+            Matcher matcher = interpolator.matcher(distroArt);
             int distroColorDemand = 1;
             while(matcher.find()){
                 int palettePosition = Integer.parseInt(matcher.group(1));
@@ -4972,52 +4973,45 @@ ssssssssssssso/-`      `-/osssssssssssss
             return 1;
         }
 
-        public void setPalette(Color[] palette){
-            Matcher matcher = interpolator.matcher(distroArt.toString());
+        public void setPalette(Attribute[][] palette){
+            Matcher matcher = interpolator.matcher(distroArt);
             if (palette.length < getColorCount()){
                 throw new CommandLine.PicocliException("color palette doesn't have enough colors for distro-art");
             }
             this.palette = palette;
         }
 
-        @Override
-        public String toString(){
-            AnsiConsole.systemInstall();
-            Matcher matcher = interpolator.matcher(distroArt.toString());
-            StringBuilder sb = new StringBuilder();
-            Color currentColor = this.palette[0];
-            String[] separatedArt = distroArt.split(interpolator.toString());
-            for (int i = 0; i < matcher.groupCount(); i++) {
-                try{
-                    currentColor = palette[Integer.parseInt(matcher.group(i))];
-                }catch (IllegalStateException ignored){
-
+        /**
+         * formats a given string per {@link #palette}.
+         *
+         * @param text String which may have none, one or many formatting placeholders {@code ie ${c1}}.
+         * @return String rendered per format placeholder numbers and color palette.
+         */
+        public String render(String text) {
+                Matcher matcher = interpolator.matcher(text);
+                if (!matcher.find()) {
+                        return colorizeWithBreaklines(text);
                 }
-                sb.append(ansi()
-                        .fg(currentColor)
-                        .a(separatedArt[i + 1])
-                );
-            }
-            return sb.toString();
+                paletteSelection = Integer.parseInt(matcher.group(1)) - 1;
+                if (Pattern.matches("^\\$\\{c\\d}", text)){
+                        return render(text.substring(matcher.end(1) + 1));
+                }
+                return text.substring(0, matcher.start(1) - 3) + render(
+                        text.substring(matcher.end(1) + 1));
         }
 
-        public void render() {
-            Matcher matcher = interpolator.matcher(distroArt.toString());
-            Color currentColor = this.palette[0];
-            String[] separatedArt = distroArt.split(interpolator.toString());
-            for (int i = 0; i < matcher.groupCount(); i++) {
-                try{
-                    currentColor = palette[Integer.parseInt(matcher.group(i))];
-                }catch (IllegalStateException ignored){
+        /**
+         * wrapper for <a href="https://dialex.github.io/JColor/com/diogonunes/jcolor/Ansi.html#colorize(com.diogonunes.jcolor.Command)">jcolor.ansi#colorize</a>,
+         * allowing for multiline strings to maintain color between lines.
+         */
+        public String colorizeWithBreaklines(String text) {
+                return Arrays.stream(text.split( "\r\n?|\n"))
+                        .map(segment -> colorize(segment, palette[paletteSelection]))
+                        .collect(Collectors.joining(System.lineSeparator()));
+        }
 
-                }
-                AnsiConsole.systemInstall();
-                final PrintStream output = AnsiConsole.out();
-
-                output.println(ansi()
-                        .fgBrightGreen()
-                        .a(separatedArt[i + 1]).reset());
-            }
-            AnsiConsole.systemUninstall();
+        @Override
+        public String toString(){
+            return render(distroArt);
         }
     }
