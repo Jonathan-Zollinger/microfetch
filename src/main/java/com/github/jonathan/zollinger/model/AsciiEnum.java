@@ -65,11 +65,11 @@ public enum AsciiEnum {
 //            BLUE_TEXT(),
 //            GREEN_TEXT(),
 //            BRIGHT_BLUE_TEXT()
-            TEXT_COLOR(247,68,61),  // red
-            TEXT_COLOR(247,197,17), // yellow
-            TEXT_COLOR(0,102,211),  // blue
-            TEXT_COLOR(130,211,46), // green
-            TEXT_COLOR(35,188,247)  // light blue
+            TEXT_COLOR(247, 68, 61),  // red
+            TEXT_COLOR(247, 197, 17), // yellow
+            TEXT_COLOR(0, 102, 211),  // blue
+            TEXT_COLOR(130, 211, 46), // green
+            TEXT_COLOR(35, 188, 247)  // light blue
     }}),
 
     ALPINE("""
@@ -102,7 +102,7 @@ public enum AsciiEnum {
             /${c2}//    ${c1}\\\\  \\\\
             ${c2}//      ${c1}\\\\  \\\\
                      \\\\
-            """),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
 
     ALTER("""
             ${c1}                      %,
@@ -125,7 +125,7 @@ public enum AsciiEnum {
                8~~:~~:~~~~:~~~~_1ltltu          ,www
               5~~:~~:~~:~~:~~:~~~_1ltq             N,,
              g~:~~:~~~:~~:~~:~:~~~~1q                N,
-            """),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT()}}),
 
     AMAZON("""
             ${c1}             `-/oydNNdyo:.`
@@ -147,7 +147,7 @@ public enum AsciiEnum {
             .:+ydNMMMMMMMMMMMh    yMMMMMMMMMMMNdy+:.
                  `.:+shNMMMMMh    yMMMMMNhs+:``
                         `-+shy    shs+:`
-            """),
+            """, new Attribute[][]{new Attribute[]{YELLOW_TEXT()}}),
 
     ANARCHY("""
                                      ${c2}..${c1}
@@ -178,7 +178,7 @@ public enum AsciiEnum {
                                             ${c2}.:${c1}:
                                                ${c2}..${c1}
                                                 ${c2}..${c1}
-            """),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
 
     ANDROID("""
             ${c1}         -o          o-
@@ -199,7 +199,7 @@ public enum AsciiEnum {
                       MMMMo  oMMMM
                       MMMMo  oMMMM
                       oNMm-  -mMNs
-            """),
+            """, new Attribute[][]{new Attribute[]{GREEN_TEXT(), WHITE_TEXT()}}),
 
     ANDROID_SMALL("""
             ${c1}  ;,           ,;
@@ -207,7 +207,7 @@ public enum AsciiEnum {
              /    O     O    \\\\
             |                 |
             '-----------------
-            """),
+            """, new Attribute[][]{new Attribute[]{GREEN_TEXT()}}),
 
     ANTERGOS("""
             ${c2}              `.-/::/-``
@@ -229,7 +229,7 @@ public enum AsciiEnum {
             .smmmmddddddddhhhhhhhhhdddddddddmmmms.
                `+ydmmmdddddddddddddddddddmmmmdy/.
                   `.:+ooyyddddddddddddyyso+:.`
-            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
+            """, new Attribute[][]{new Attribute[]{WHITE_TEXT(), BLUE_TEXT()}}),
 
     ANTIX("""
             ${c1}
@@ -245,7 +245,7 @@ public enum AsciiEnum {
                ,                  /     ,\\
                  ,               /  , '   \\
                   ' - , _ _ _ ,
-            """),
+            """, new Attribute[][]{new Attribute[]{WHITE_TEXT()}}),
 
     AOSC_OS("""
             ${c2}             .:+syhhhhys+:.
@@ -268,8 +268,8 @@ public enum AsciiEnum {
                   `+mMMMMMMMMNmddMMMMMMMMMMm+`
                      .ohNMMMMMMMMMMMMMMNho.
                          .:+syhhhhys+:.
-            """),
-    AOSC_OSRETRO("""
+            """, new Attribute[][]{new Attribute[]{YELLOW_TEXT(), RED_TEXT()}}),
+    AOSC_OS_RETRO("""
             ${c2}          .........
                  ...................
                .....................${c1}################${c2}
@@ -288,8 +288,8 @@ public enum AsciiEnum {
               ${c3}................        ${c4}###########
               ${c3}****************
               ${c3}################
-            """),
-    APERIO_GNULINUX("""
+            """, new Attribute[][]{new Attribute[]{WHITE_TEXT(), BLUE_TEXT(), RED_TEXT(), YELLOW_TEXT()}}),
+    APERIO_GNU_LINUX("""
             ${c2}
              _.._  _ ._.. _
             (_][_)(/,[  |(_)
@@ -297,7 +297,7 @@ public enum AsciiEnum {
             """),
 
     APRICITY("""
-            ${c2}                                    ./o-
+            ${c1}                                    ./o-
                       ``...``              `:. -/:
                  `-+ymNMMMMMNmho-`      :sdNNm/
                `+dMMMMMMMMMMMMMMMmo` sh:.:::-
@@ -315,7 +315,7 @@ public enum AsciiEnum {
             MMMMMMMMMMMMMMMms:`
             MMMMMMMMMMNds/.
             dhhyys+/-`
-            """),
+            """, new Attribute[][]{new Attribute[]{WHITE_TEXT()}}),
 
     ARCH("""
             ${c1}                   -`
@@ -337,7 +337,7 @@ public enum AsciiEnum {
               `+sso+:-`                 `.-/+oso:
              `++:.                           `-/+/
              .`                                 `/
-            """),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
 
     ARCH_OLD("""
             ${c1}             __
@@ -349,11 +349,14 @@ public enum AsciiEnum {
             ${c1}   [LKDSDJTDU=OUSCSBFLD.${c2}   '?ZWX,
             ${c1}  ,LMDSDSWH'     `DCBOSI${c2}     DRDS],
             ${c1}  SDDFDFH'         !YEWD,${c2}   )HDROD
-            ${c1} !KMDOCG            &GSU|${c2}\\_GFHRGO\\${c1} HKLSGP'${c2}           __${c1}\\TKM0${c2}\\GHRBV)${c1}JSNRVW'${c2}       __+MNAEC${c1}\\IOI,${c2}\\BN${c1}HELK['${c2}    __,=OFFXCBGHC${c1}\\FD)
+            ${c1} !KMDOCG            &GSU|${c2}\\_GFHRGO\\'
+            ${c1} HKLSGP'${c2}           __${c1}\\TKM0${c2}\\GHRBV)'
+            ${c1}JSNRVW'${c2}       __+MNAEC${c1}\\IOI,${c2}\\BN'
+            ${c1}HELK['${c2}    __,=OFFXCBGHC${c1}\\FD)
             ${c1}?KGHE ${c2}\\_-#DASDFLSV='${c1}    'EF
             'EHTI                    !H
              `0F'                    '!
-            """),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
 
     ARCH_SMALL("""
             ${c1}      /\\\\
@@ -365,7 +368,7 @@ public enum AsciiEnum {
             /_-''    ''-_\\\\
             """),
 
-    ARCHBOX("""
+    ARCH_BOX("""
             ${c1}              ...:+oh/:::..
                      ..-/oshhhhhh`   `::::-.
                  .:/ohhhhhhhhhhhh`        `-::::.
@@ -385,9 +388,9 @@ public enum AsciiEnum {
                 `--/:`   /:     `hhhhhhhhhhhho/-
                          -/:.   `hhhhhhs+:-`
                             ::::/ho/-`
-            """),
+            """, new Attribute[][]{new Attribute[]{GREEN_TEXT()}}),
 
-    ARCHCRAFT("""
+    ARCH_CRAFT("""
             ${c1}                   -m:
                               :NMM+      .+
                              +MMMMMo    -NMy
@@ -406,10 +409,11 @@ public enum AsciiEnum {
               :NMMMMMy         `s`   :h.   oMMMMMM+ `-----
              +MMMMMMo         .dMm.   `o.   +MMMMMMo
             sMMMMMM+         .mMMMN:    :`   :NMMMMMy
-            """),
+            """, new Attribute[][]{new Attribute[]{CYAN_TEXT()}}),
 
-    ARCHLABS("""
-            ${c1}                     'c                    'kKk,
+    ARCH_LABS("""
+            ${c1}                     'c'
+                                'kKk,
                                .dKKKx.
                               .oKXKXKd.
                              .l0XXXXKKo.
@@ -424,12 +428,14 @@ public enum AsciiEnum {
                     .l0XXXk:${c4},dKx,.'l0XKo.${c1}.kXXXKo.
                    .o0XXXX0d,${c4}:x;   .oKKx'${c1}.dXKXXKd.
                   .oKXXXXKK0c.${c4};.    :00c'${c1}cOXXXXXKd.
-                 .dKXXXXXXXXk,${c4}.     cKx'${c1}'xKXXXXXXKx    'xKXXXXK0kdl:.     ${c4}.ok; ${c1}.cdk0KKXXXKx   'xKK0koc,..         ${c4}'c, ${c1}    ..,cok0KKk,
+                 .dKXXXXXXXXk,${c4}.     cKx'${c1}'xKXXXXXXKx'
+                'xKXXXXK0kdl:.     ${c4}.ok; ${c1}.cdk0KKXXXKx'
+               'xKK0koc,..         ${c4}'c, ${c1}    ..,cok0KKk,
               ,xko:'.             ${c4}.. ${c1}           .':okx;
              .,'.                                   .',.
-            """),
+            """, new Attribute[][]{new Attribute[]{CYAN_TEXT(), CYAN_TEXT(), BRIGHT_BLACK_TEXT(), RED_TEXT()}}),
 
-    ARCHMERGE("""
+    ARCH_MERGE("""
             ${c1}                    y:
                               sMN-
                              +MMMm`
@@ -450,27 +456,27 @@ public enum AsciiEnum {
               /NMMMNds+:.`             `-/oymMMMm.
              +Mmy/.                          `:smN:
             /+.                                  -o.
-            """),
+            """, new Attribute[][]{new Attribute[]{CYAN_TEXT()}}),
 
-    ARCHSTRIKE("""
-            ${c1}                   *   
-                              **.
-                             ****
-                            ******
-                            *******
-                          ** *******
-                         **** *******
-                        ${c1}****${c2}_____${c1}***${c2}/${c1}*
-                       ***${c2}/${c1}*******${c2}//${c1}***
-                      **${c2}/${c1}********${c2}///${c1}*${c2}/${c1}**
-                     **${c2}/${c1}*******${c2}////${c1}***${c2}/${c1}**
-                    **${c2}/${c1}****${c2}//////.,${c1}****${c2}/${c1}**
-                   ***${c2}/${c1}*****${c2}/////////${c1}**${c2}/${c1}***
-                  ****${c2}/${c1}****    ${c2}/////${c1}***${c2}/${c1}****
-                 ******${c2}/${c1}***  ${c2}////   ${c1}**${c2}/${c1}******
-                ********${c2}/${c1}* ${c2}///      ${c1}*${c2}/${c1}********
-              ,******     ${c2}// ______ /    ${c1}******,
-            """),
+    ARCH_STRIKE("""
+            ${c1} \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 *\u00a0 \u00a0
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 **.
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0****
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 ******
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 *******
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 ** *******
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0**** *******
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 ${c1}****${c2}_____${c1}***${c2}/${c1}*
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0***${c2}/${c1}*******${c2}//${c1}***
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 **${c2}/${c1}********${c2}///${c1}*${c2}/${c1}**
+            \u00a0 \u00a0 \u00a0 \u00a0 \u00a0**${c2}/${c1}*******${c2}////${c1}***${c2}/${c1}**
+            \u00a0 \u00a0 \u00a0 \u00a0 **${c2}/${c1}****${c2}//////.,${c1}****${c2}/${c1}**
+            \u00a0 \u00a0 \u00a0 \u00a0***${c2}/${c1}*****${c2}/////////${c1}**${c2}/${c1}***
+            \u00a0 \u00a0 \u00a0 ****${c2}/${c1}**** \u00a0 \u00a0${c2}/////${c1}***${c2}/${c1}****
+            \u00a0 \u00a0 \u00a0******${c2}/${c1}***  ${c2}//// \u00a0 ${c1}**${c2}/${c1}******
+            \u00a0 \u00a0 ********${c2}/${c1}* ${c2}/// \u00a0 \u00a0\u00a0 ${c1}*${c2}/${c1}********
+            \u00a0 ,****** \u00a0 \u00a0 ${c2}// ______ / \u00a0 \u00a0${c1}******,
+            """, new Attribute[][]{new Attribute[]{BRIGHT_BLACK_TEXT(), CYAN_TEXT()}}),
 
     ARCOLINUX("""
             ${c2}                    /-
@@ -4958,7 +4964,7 @@ public enum AsciiEnum {
     final Pattern interpolator = Pattern.compile("(\\$\\{c\\d+})");
     final Pattern easyLineSep = Pattern.compile("\r\n?|\n");
 
-//    static int paletteSelection;
+    //    static int paletteSelection;
     Attribute[][] palette;
 
     AsciiEnum(String distroArt, Attribute[][] palette) {
@@ -4986,10 +4992,10 @@ public enum AsciiEnum {
         Matcher matcher = interpolator.matcher(distroArt);
         List<Integer> colorPositions = new ArrayList<>();
         while (matcher.find()) {
-            colorPositions.add(Integer.parseInt(matcher.group(1).replaceAll("\\D","")));
+            colorPositions.add(Integer.parseInt(matcher.group(1).replaceAll("\\D", "")));
         }
         Optional<Integer> maxValue = colorPositions.stream().max((spam, eggs) -> spam.compareTo(eggs));
-        if(maxValue.isEmpty()){
+        if (maxValue.isEmpty()) {
             return 0;
         }
         return maxValue.get();
@@ -5036,14 +5042,14 @@ public enum AsciiEnum {
 //        }
         String firstHalf = text.substring(0, matcher.start(1));
         String secondHalf = render(text.substring(matcher.end(1)), getPaletteSelectionFromInterpolator(matcher.group(1)));
-        if (firstHalf.substring(firstHalf.length() - 1).matches(".*" + easyLineSep.pattern())){
+        if (firstHalf.substring(firstHalf.length() - 1).matches(".*" + easyLineSep.pattern())) {
             return colorizeWithBreaklines(firstHalf, paletteSelection) + System.lineSeparator() + secondHalf;
         }
         return colorizeWithBreaklines(firstHalf, paletteSelection) + secondHalf;
     }
 
-    int getPaletteSelectionFromInterpolator(String text){
-        return validatePaletteSelection(Integer.parseInt(text.replaceAll("\\D","")) - 1);
+    int getPaletteSelectionFromInterpolator(String text) {
+        return validatePaletteSelection(Integer.parseInt(text.replaceAll("\\D", "")) - 1);
     }
 
     /**
