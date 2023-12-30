@@ -11,9 +11,9 @@ class AsciiEnumSpec extends Specification {
     void "print all enums sans error"() {
         when:
         for(AsciiEnum distro: AsciiEnum.getEnumConstants()){
-            System.println(colorize("vvvvvvvvv new ascii image below    vvvvvvvvv", TEXT_COLOR(0)))
+            System.println(colorize("vvvvvvvvv ${distro.name()} logo below    vvvvvvvvv", TEXT_COLOR(0)))
             System.println(distro)
-            System.println(colorize("^^^^^^^^^ finish above ascii image ^^^^^^^^^", TEXT_COLOR(0)))
+            System.println(colorize("^^^^^^^^^ ${distro.name()} logo above ^^^^^^^^^", TEXT_COLOR(0)) + "\n\n")
         }
         then:
         noExceptionThrown()
@@ -21,9 +21,9 @@ class AsciiEnumSpec extends Specification {
 
     void "visual test linux distro prints colors"() {
         when:
-        System.println("vvvvvvvvv new ascii image below    vvvvvvvvv")
+        System.println("vvvvvvvvv ${distro.name()} logo below    vvvvvvvvv")
         System.println(distro)
-        System.println("^^^^^^^^^ finish above ascii image ^^^^^^^^^")
+        System.println("^^^^^^^^^ ${distro.name()} logo above ^^^^^^^^^")
 
         then:
         noExceptionThrown()
