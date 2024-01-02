@@ -1,17 +1,22 @@
+
 plugins {
     id('groovy') 
     id('com.github.johnrengelman.shadow') version '8.1.1'
     id('io.micronaut.application') version '4.2.0'
-    id('org.asciidoctor.jvm.convert') version '3.3.2'
 }
 
 version = '0.0.1'
 group = 'com.github.jonathan.zollinger'
 
-apply from: 'gradle/asciidoc.gradle'
+tasks.register('copyToPropertiesFile', Copy) {
+    into 'src/main/resources/application.yml'
+    expand(microfetchVersion: version)
+}
+
 repositories {
     mavenCentral()
 }
+
 apply plugin: 'java'
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'ISO-8859-1'
@@ -19,17 +24,19 @@ tasks.withType(JavaCompile).configureEach {
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'info.picocli:picocli-codegen'
-    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
     implementation 'info.picocli:picocli'
     implementation 'io.micronaut.picocli:micronaut-picocli'
     implementation 'io.micronaut.serde:micronaut-serde-jackson'
-    runtimeOnly 'org.slf4j:slf4j-simple'
     implementation 'com.diogonunes:JColor:5.5.1'
+    implementation 'com.google.guava:guava:33.0.0-jre'
+    annotationProcessor 'info.picocli:picocli-codegen'
+    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
+    runtimeOnly 'org.slf4j:slf4j-simple'
+    runtimeOnly 'org.yaml:snakeyaml'
 }
 
 application {
-    mainClass.set('com.github.jonathan.zollinger.Application')
+    mainClass.set('com.github.jonathan.zollinger.cli.Microfetch.java')
 }
 
 java {
