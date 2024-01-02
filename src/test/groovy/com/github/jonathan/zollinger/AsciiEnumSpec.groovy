@@ -1,11 +1,13 @@
 package com.github.jonathan.zollinger
 
 import com.github.jonathan.zollinger.model.AsciiEnum
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
 import static com.diogonunes.jcolor.Ansi.colorize
 import static com.diogonunes.jcolor.Attribute.TEXT_COLOR
 
+@MicronautTest
 class AsciiEnumSpec extends Specification {
 
     void "print all enums sans error"() {
