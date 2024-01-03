@@ -18,8 +18,10 @@ Microfetch is an improved version of neofetch written with [micronaut] and built
     <li>Move executable to dedicated directory, ie <code>C:\Program Files\threshr\</code></li>
     <li>Add directory to your PATH <details><summary>(I like to add this snippet to my ps profile)</summary>
 
+
 ```PowerShell
-"C:\Program Files\threshr\" |
+# assuming you've added the microfetch binary to C:\Program Files\microfetch\
+"C:\Program Files\microfetch\" |
 if (!($env:Path -like "*$_*"))
 {
     $env:Path = "$( $env:Path );$_"
@@ -38,7 +40,7 @@ ___
 
 ### Want to get involved?
 
-See our [contributing] doc before taking a whack at any [open issues]. We'd love for you to work with us!
+Take a whack at any [open issues]!
 
 
 [build badge]:https://img.shields.io/github/actions/workflow/status/Jonathan-Zollinger/Microfetch/gradle.yml?style=plastic&logo=github&label=Gradle%20Build&link=https%3A%2F%2Fgithub.com%2FJonathan-Zollinger%2FMicrofetch%2Factions%20build-status%20
