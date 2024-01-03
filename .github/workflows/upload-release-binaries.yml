@@ -1,4 +1,4 @@
-name: Graalvm test and build with Gradle
+name: upload native image binaries
 
 on:
   release:
