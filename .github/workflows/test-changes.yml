@@ -28,8 +28,9 @@ jobs:
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: '17'
-        distribution: 'graalvm'
+        distribution: 'graalvm-community'
         github-token: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
         native-image-job-reports: 'true'
-    - name: run all tests then build on ${{ matrix.os }}
+        native-image-pr-reports: 'true'
+    - name: test and build on ${{ matrix.os }}
       run: gradlew nativeCompile
