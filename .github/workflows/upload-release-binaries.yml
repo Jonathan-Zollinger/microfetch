@@ -2,7 +2,7 @@ name: upload native image binaries
 
 on:
   release:
-    branches: [ main ]
+    types: [created]
 permissions:
   contents: read
 jobs:
