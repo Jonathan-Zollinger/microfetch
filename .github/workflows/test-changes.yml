@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest] # unsupported by 1password atm https://github.com/1Password/load-secrets-action/issues/46
     steps:
     - uses: actions/checkout@v4
     - name: Load secrets from 1Password

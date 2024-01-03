@@ -1,0 +1,32 @@
+name: Graalvm test and build with Gradle
+
+on:
+  release:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+          - os: ubuntu-latest
+          - os: windows-latest
+            filetype: 'exe'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm-community'
+      - name: build for ${{ matrix.os }} os
+        run: ./gradlew nativeCompile
+      - name: upload binaries
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: microfetch-${{ matrix.os }}
+          path: '/home/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch'${{ matrix.filetype }}
