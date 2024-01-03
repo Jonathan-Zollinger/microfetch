@@ -15,12 +15,12 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Load secrets from 1Password
       uses: 1Password/load-secrets-action@v1.3.1
       id: OPassword-credentials
       with:
-        export-env: false
+        export-env: true
       env:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_GHACTIONS_SA_TOKEN }}
         GITHUB_TOKEN: op://gh/microfetch_graalvm/credential
@@ -33,4 +33,4 @@ jobs:
         native-image-job-reports: 'true'
         native-image-pr-reports: 'true'
     - name: test and build on ${{ matrix.os }}
-      run: gradlew nativeCompile
+      run: ./gradlew nativeCompile
