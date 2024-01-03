@@ -36,7 +36,7 @@ dependencies {
 }
 
 application {
-    mainClass.set('com.github.jonathan.zollinger.cli.Microfetch.java')
+    mainClass.set('com.github.jonathan.zollinger.cli.Microfetch')
 }
 
 java {
