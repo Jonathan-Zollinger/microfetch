@@ -1,0 +1,35 @@
+name: Graalvm test and build with Gradle
+
+on:
+  push:
+    branches: [ main, v*, release/* ]
+  pull_request:
+    branches: [ main, v*, release/* ]
+
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Load secrets from 1Password
+      uses: 1Password/load-secrets-action@v1.3.1
+      id: OPassword-credentials
+      with:
+        export-env: false
+      env:
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_GHACTIONS_SA_TOKEN }}
+        GITHUB_TOKEN: op://gh/microfetch_graalvm/credential
+    - name: Set up JDK 17
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: '17'
+        distribution: 'graalvm'
+        github-token: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
+        native-image-job-reports: 'true'
+    - name: run all tests then build on ${{ matrix.os }}
+      run: gradlew nativeCompile
