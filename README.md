@@ -46,7 +46,7 @@ Take a whack at any [open issues]!
 [build badge]:https://img.shields.io/github/actions/workflow/status/Jonathan-Zollinger/Microfetch/test-changes.yml?style=for-the-badge&logo=github&label=Gradle%20Build&link=https%3A%2F%2Fgithub.com%2FJonathan-Zollinger%2FMicrofetch%2Factions%20build-status%20
 [build link]:https://github.com/Jonathan-Zollinger/Microfetch/actions/workflows/test-changes.yml
 [issues badge]:https://img.shields.io/github/issues/jonathan-zollinger/microfetch?style=for-the-badge
-[open issues link]:https://github.com/Jonathan-Zollinger/Microfetch/issues"open-issues"
+[open issues link]:https://github.com/Jonathan-Zollinger/Microfetch/issues
 [open issues for next release badge and link]:https://img.shields.io/github/milestones/issues-open/jonathan-zollinger/microfetch/1?style=for-the-badge&label=remaining%20issues%20for%20release%20v0.0.1&link=https%3A%2F%2Fgithub.com%2FJonathan-Zollinger%2Fmicrofetch%2Fmilestones
 [download link]:https://github.com/Jonathan-Zollinger/Microfetch/archive/refs/heads/main.zip
 [license]:https://img.shields.io/github/license/Jonathan-Zollinger/Microfetch?style=for-the-badge"GPL-3-License"
