@@ -1,8 +1,9 @@
 name: upload native image binaries
 
 on:
+  workflow_dispatch:
   release:
-    types: [created]
+    types: [released]
 permissions:
   contents: read
 jobs:
