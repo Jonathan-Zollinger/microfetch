@@ -1,4 +1,4 @@
-name: upload native image binaries
+name: Publish New Release
 
 on:
   workflow_dispatch:
@@ -14,10 +14,15 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: macos-latest
+            file: /Users/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch
           - os: ubuntu-latest
+            file: /home/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch
           - os: windows-latest
-            filetype: 'exe'
+            file: D:\a\microfetch\microfetch\build\native\nativeCompile\microfetch.exe
     steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref_name }} and your repository is ${{ github.repository }}."
       - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: graalvm/setup-graalvm@v1
@@ -30,4 +35,4 @@ jobs:
         uses: actions/upload-artifact@v4.0.0
         with:
           name: microfetch-${{ matrix.os }}
-          path: /home/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch${{ matrix.filetype }}
+          path: ${{ matrix.file }}
