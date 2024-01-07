@@ -6,7 +6,7 @@
 
 Microfetch is an improved version of neofetch written with [micronaut] and built with [graalvm].
 
-![WindowsTerminal_CdOxKQxCBf.gif](src/docs/WindowsTerminal_CdOxKQxCBf.gif)
+![example](src/docs/example.gif)
 
 
 ### Install
