@@ -34,3 +34,20 @@ jobs:
         native-image-pr-reports: 'true'
     - name: test and build on ${{ matrix.os }}
       run: ./gradlew nativeCompile
+    - if: runner.os == 'ubuntu'
+      run: echo -e "#! /usr/bin/env bash \n/home/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch" >> microfetch
+    - if: runner.os == 'ubuntu'
+      uses: charmbracelet/vhs-action@v1
+      with:
+        path: 'src/docs/example.tape'
+    - if: runner.os == 'ubuntu'
+      uses: stefanzweifel/git-auto-commit-action@v4
+      env:
+        GITHUB_TOKEN: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
+      with:
+        commit_message: Update generated VHS GIF
+        branch: main
+        commit_user_name: vhs-action 📼
+        commit_user_email: actions@github.com
+        commit_author: vhs-action 📼 <actions@github.com>
+        file_pattern: '*.gif'
