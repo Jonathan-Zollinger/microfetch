@@ -5,7 +5,7 @@ plugins {
     id('io.micronaut.application') version '4.2.0'
 }
 
-version = '0.0.1'
+version = '0.0.2-SNAPSHOT'
 group = 'com.github.jonathan.zollinger'
 
 tasks.register('copyToPropertiesFile', Copy) {
