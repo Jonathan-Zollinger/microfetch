@@ -11,16 +11,13 @@ import java.util.stream.Collectors;
 public class AsciiEnumTypeConverter implements CommandLine.ITypeConverter<AsciiEnum> {
 
     @Override
-    public AsciiEnum convert(String s) {
-        Optional<AsciiEnum> distro = Enums.getIfPresent(AsciiEnum.class, s.toUpperCase())
-                .or(Enums.getIfPresent(AsciiEnum.class, s));
+    public AsciiEnum convert(String string) {
+        Optional<AsciiEnum> distro = Enums.getIfPresent(AsciiEnum.class, string.toUpperCase())
+                .or(Enums.getIfPresent(AsciiEnum.class, string));
         if (!distro.isPresent()) {
-            throw new CommandLine.TypeConversionException(
-                    String.format("Invalid option: '%s'", s) +
-                            String.format("Valid options are: %s", Arrays.stream(AsciiEnum.class
-                                            .getEnumConstants())
-                                    .map(Enum::name).collect(Collectors.joining(", "))
-                            ));
+            throw new CommandLine.TypeConversionException(String.format("Invalid option: '%s'", string) +
+                    String.format("Valid options are: %s", Arrays.stream(AsciiEnum.class.getEnumConstants())
+                            .map(Enum::name).collect(Collectors.joining(", "))));
         }
         return distro.get();
     }
