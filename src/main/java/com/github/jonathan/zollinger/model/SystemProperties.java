@@ -1,10 +1,14 @@
 package com.github.jonathan.zollinger.model;
 
+import io.micronaut.core.annotation.Introspected;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import oshi.SystemInfo;
 
 import java.util.function.Function;
 
+@Singleton
+@Introspected
 public abstract class SystemProperties {
 
     @Inject
@@ -24,7 +28,7 @@ public abstract class SystemProperties {
      */
     protected abstract String Value();
 
-    protected Function<Long, String> readableBytes = bytes -> {
+    public Function<Long, String> readableBytes = bytes -> {
         if (bytes < 1024) return bytes + " B";
         int z = (63 - Long.numberOfLeadingZeros(bytes)) / 10;
         return String.format("%.1f %sB", (double)bytes / (1L << (z * 10)),
