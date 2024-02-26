@@ -29,6 +29,7 @@ dependencies {
     implementation 'io.micronaut.serde:micronaut-serde-jackson'
     implementation 'com.diogonunes:JColor:5.5.1'
     implementation 'com.google.guava:guava:33.0.0-jre'
+    implementation 'com.github.oshi:oshi-core:6.4.4'
     annotationProcessor 'info.picocli:picocli-codegen'
     annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
     runtimeOnly 'org.slf4j:slf4j-simple'
