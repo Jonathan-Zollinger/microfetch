@@ -56,20 +56,21 @@ class MicrofetchCliSpec extends Specification {
         "-v"        | _
     }
 
-    def "querying for #distro parses from the cli without an error"() {
+    def "querying for a linux distro parses from the cli without an error"() {
         given:
         String flag = new Random().nextBoolean() ? "--distro" : "--os"
 
-        when: "using '#flag #distro' flag"
-        String[] args = new String[]{flag, distro}
+        when: "using '#flag' flag"
+        String[] args = new String[]{flag, (distro as AsciiEnum).name().toLowerCase()}
         PicocliRunner.run(Microfetch, ctx, args)
 
         then: "no error output and output is not blank"
         !outputStream.toString().isBlank()
+        outputStream.toString().contains(distro.toString())
         errStream.toString().isBlank()
 
         where:
-        distro << AsciiEnum.getEnumConstants()*.name()*.toLowerCase()
+        distro << AsciiEnum.getEnumConstants()
     }
 }
 
