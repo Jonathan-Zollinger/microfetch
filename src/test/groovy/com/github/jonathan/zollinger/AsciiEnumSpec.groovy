@@ -34,6 +34,7 @@ class AsciiEnumSpec extends Specification {
         distro                  | _
         AsciiEnum.KALI          | _
         AsciiEnum.WINDOWS_10    | _
+        //add distros to test visuals manually here
 
     }
 }
