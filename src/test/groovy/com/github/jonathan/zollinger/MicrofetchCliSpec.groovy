@@ -7,6 +7,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Value
 import io.micronaut.context.env.Environment
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import oshi.SystemInfo
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -92,6 +93,23 @@ class MicrofetchCliSpec extends Specification {
         distro         | _
         ""             | _
         "Randy Newman" | _
+    }
+
+    def "default distro is appropriate for this os (whatever this os is)"() {
+        given:
+        String os = new SystemInfo().operatingSystem.getFamily()
+
+        when: "perform query with no args"
+        PicocliRunner.run(Microfetch, ctx, new String[]{})
+
+        then: "no error output"
+        errStream.toString().isBlank()
+
+        and: "#os distro art is returned"
+        outputStream.toString().contains(
+                AsciiEnum.getEnumConstants().find {it.name().equalsIgnoreCase(os)}.toString()
+        )
+
     }
 }
 
