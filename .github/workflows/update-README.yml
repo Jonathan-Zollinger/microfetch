@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Load secrets from 1Password
-      uses: 1Password/load-secrets-action@v1.3.1
+      uses: 1Password/load-secrets-action@v2.0.0
       id: OPassword-credentials
       with:
         export-env: true
