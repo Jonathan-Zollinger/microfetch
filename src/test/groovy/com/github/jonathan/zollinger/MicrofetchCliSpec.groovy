@@ -22,10 +22,12 @@ class MicrofetchCliSpec extends Specification {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
     ByteArrayOutputStream errStream = new ByteArrayOutputStream()
 
-    @Shared @AutoCleanup
+    @Shared
+    @AutoCleanup
     ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
 
-    @Shared @Value('${micronaut.application.version}')
+    @Shared
+    @Value('${micronaut.application.version}')
     String version = "0.0.1"
 
     def setup() {
@@ -64,13 +66,32 @@ class MicrofetchCliSpec extends Specification {
         String[] args = new String[]{flag, (distro as AsciiEnum).name().toLowerCase()}
         PicocliRunner.run(Microfetch, ctx, args)
 
-        then: "no error output and output is not blank"
+        then: "no error output and output contains appropriate distro"
         !outputStream.toString().isBlank()
         outputStream.toString().contains(distro.toString())
         errStream.toString().isBlank()
 
         where:
         distro << AsciiEnum.getEnumConstants()
+    }
+
+    def "querying for an invalid or blank distro prints a default linux image"() {
+        given:
+        String flag = new Random().nextBoolean() ? "--distro" : "--os"
+
+        when: "using '#flag' flag"
+        String[] args = new String[]{flag, distro.toLowerCase()}
+        PicocliRunner.run(Microfetch, ctx, args)
+
+        then: "no error output and output contains linux distro"
+        !outputStream.toString().isBlank()
+        outputStream.toString().contains(AsciiEnum.LINUX.toString())
+        errStream.toString().isBlank()
+
+        where:
+        distro         | _
+        ""             | _
+        "Randy Newman" | _
     }
 }
 
