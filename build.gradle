@@ -56,6 +56,17 @@ micronaut {
         annotations('com.github.jonathan.zollinger.*')
     }
 }
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.addAll(
+                    '--verbose',
+                    '--initialize-at-build-time=com.sun.jna.platform.linux.Udev',
+                    '--report-unsupported-elements-at-runtime',
+                    '-H:+PrintAnalysisCallTree')
+        }
+    }
+}
 
 
 
