@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 import java.util.Arrays;
 
@@ -24,18 +25,23 @@ public class Microfetch implements Runnable {
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
 
+    @Parameters(index = "0", arity = "0..1", hidden = true)
+    private String ignored;
+
     public static void main(String[] args) {
         PicocliRunner.run(Microfetch.class, args);
     }
 
+    @Override
     public void run() {
         if (version) {
             System.out.println(Arrays.toString(versionProvider.getVersion()));
-        } else
+        } else {
             if (null == distro) {
-               distro = OperatingSystem.getOsFamily();
+                distro = OperatingSystem.getOsFamily();
             }
             System.out.println(distro);
+        }
     }
 
     /**
