@@ -49,7 +49,6 @@ dependencies {
     runtimeOnly 'org.yaml:snakeyaml'
 }
 
-def mainClassName = 'com.github.jonathan.zollinger.cli.Microfetch'
 application {
     mainClass.set('com.github.jonathan.zollinger.cli.Microfetch')
 }
