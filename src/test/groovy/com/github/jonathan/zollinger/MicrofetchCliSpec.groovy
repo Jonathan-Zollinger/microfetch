@@ -4,7 +4,6 @@ import com.github.jonathan.zollinger.cli.Microfetch
 import com.github.jonathan.zollinger.model.AsciiEnum
 import io.micronaut.configuration.picocli.PicocliRunner
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Value
 import io.micronaut.context.env.Environment
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import oshi.SystemInfo
@@ -15,8 +14,17 @@ import spock.lang.Specification
 class MicrofetchCliSpec extends Specification {
 
     @Shared
-    @Value('${micronaut.application.version}')
-    String version = "0.0.1"
+    def gradleProperties = new Properties()
+
+    @Shared
+    String microfetchVersion
+
+    def setupSpec() {
+        new File('gradle.properties').withInputStream { stream ->
+            gradleProperties.load(stream)
+        }
+        microfetchVersion = gradleProperties.getProperty('microfetchVersion')
+    }
 
     def "query version without error"() {
         when:
@@ -24,7 +32,7 @@ class MicrofetchCliSpec extends Specification {
         def (outputStream, errStream) = executeCommand(args)
 
         then:
-        outputStream.toString() == "[Microfetch Version $version]${System.lineSeparator()}"
+        outputStream.toString() == "[Microfetch Version $microfetchVersion]${System.lineSeparator()}"
         errStream.toString().isEmpty()
 
         where:
@@ -73,14 +81,18 @@ class MicrofetchCliSpec extends Specification {
 
     def "default distro is appropriate for this os (whatever this os is)"() {
         given:
-        String os = new SystemInfo().operatingSystem.getFamily()
+        String osFamily = new SystemInfo().operatingSystem.getFamily()
+        def osMap = [
+                windows: AsciiEnum.WINDOWS,
+                macos:   AsciiEnum.MAC
+        ].withDefault { AsciiEnum.LINUX }
 
         when: "perform query with no args"
         def (outputStream, errStream) = executeCommand("")
 
         then: "no error output"
         errStream.toString().isBlank()
-        def expectedDistroArt = AsciiEnum.getEnumConstants().find {os}.toString()
+        def expectedDistroArt = osMap[osFamily.toLowerCase()].toString()
 
         and: "#os distro art is returned"
         outputStream.toString().contains(expectedDistroArt)
@@ -100,11 +112,10 @@ class MicrofetchCliSpec extends Specification {
         OutputStream out = new ByteArrayOutputStream()
         OutputStream err = new ByteArrayOutputStream()
         System.setOut(new PrintStream(out))
-        System.setErr(new PrintStream(out))
+        System.setErr(new PrintStream(err))
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
             PicocliRunner.run(Microfetch.class, ctx, args)
         }
         return new String[]{out, err}
     }
 }
-
