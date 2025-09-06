@@ -1,11 +1,13 @@
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id('groovy') 
-    id('com.github.johnrengelman.shadow') version '8.1.1'
-    id('io.micronaut.application') version '4.2.0'
+    id('groovy')
+    id("io.micronaut.application") version "4.5.4"
+    id("com.gradleup.shadow") version "8.3.6"
+    id("org.graalvm.buildtools.native") version "0.10.6"
 }
 
-version = '0.0.2-SNAPSHOT'
+version = project.properties["microfetchVersion"]
 group = 'com.github.jonathan.zollinger'
 
 tasks.register('copyToPropertiesFile', Copy) {
@@ -22,15 +24,26 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'ISO-8859-1'
 }
 
+tasks.withType(ProcessResources).configureEach {
+    def props = new Properties()
+    file("gradle.properties").withInputStream { props.load(it) }
+    filesMatching('**/application.yml') {
+        filter(ReplaceTokens, tokens: props)
+    }
+}
+
 dependencies {
+    testImplementation "io.micronaut.test:micronaut-test-spock"
+    testImplementation("org.spockframework:spock-core") {
+        exclude group: "org.codehaus.groovy", module: "groovy-all"
+    }
+    testImplementation 'com.github.oshi:oshi-core:6.4.4'
     implementation 'org.projectlombok:lombok:1.18.28'
     implementation 'info.picocli:picocli'
     implementation 'io.micronaut.picocli:micronaut-picocli'
-    implementation 'io.micronaut.serde:micronaut-serde-jackson'
     implementation 'com.diogonunes:JColor:5.5.1'
     implementation 'com.google.guava:guava:33.0.0-jre'
     annotationProcessor 'info.picocli:picocli-codegen'
-    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
     runtimeOnly 'org.slf4j:slf4j-simple'
     runtimeOnly 'org.yaml:snakeyaml'
 }
@@ -40,8 +53,8 @@ application {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion('17')
-    targetCompatibility = JavaVersion.toVersion('17')
+    sourceCompatibility = JavaVersion.toVersion('21')
+    targetCompatibility = JavaVersion.toVersion('21')
 }
 
 micronaut {

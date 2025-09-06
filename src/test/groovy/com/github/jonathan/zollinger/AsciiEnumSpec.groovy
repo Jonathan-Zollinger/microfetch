@@ -7,6 +7,9 @@ import spock.lang.Specification
 import static com.diogonunes.jcolor.Ansi.colorize
 import static com.diogonunes.jcolor.Attribute.TEXT_COLOR
 
+/**
+ * This test class is only meant to help manually test how things are printed out. These tests should never fail
+ */
 @MicronautTest
 class AsciiEnumSpec extends Specification {
 
@@ -34,6 +37,7 @@ class AsciiEnumSpec extends Specification {
         distro                  | _
         AsciiEnum.KALI          | _
         AsciiEnum.WINDOWS_10    | _
+        //add distros to test visuals manually here
 
     }
 }

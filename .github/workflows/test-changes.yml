@@ -17,17 +17,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Load secrets from 1Password
-      uses: 1Password/load-secrets-action@v1.3.1
+      uses: 1Password/load-secrets-action@v2.0.0
       id: OPassword-credentials
       with:
         export-env: true
       env:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_GHACTIONS_SA_TOKEN }}
         GITHUB_TOKEN: op://gh/microfetch_graalvm/credential
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: graalvm/setup-graalvm@v1
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'graalvm-community'
         github-token: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
         native-image-job-reports: 'true'

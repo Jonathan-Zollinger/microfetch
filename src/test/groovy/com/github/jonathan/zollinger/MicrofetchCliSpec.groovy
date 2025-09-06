@@ -4,50 +4,35 @@ import com.github.jonathan.zollinger.cli.Microfetch
 import com.github.jonathan.zollinger.model.AsciiEnum
 import io.micronaut.configuration.picocli.PicocliRunner
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Value
 import io.micronaut.context.env.Environment
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import spock.lang.AutoCleanup
+import oshi.SystemInfo
 import spock.lang.Shared
 import spock.lang.Specification
-import spock.lang.Unroll
 
 @MicronautTest
 class MicrofetchCliSpec extends Specification {
-    @Shared
-    final PrintStream originalOut = System.out
-    @Shared
-    final PrintStream originalErr = System.err
 
     @Shared
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
-    ByteArrayOutputStream errStream = new ByteArrayOutputStream()
+    def gradleProperties = new Properties()
 
-    @Shared @AutoCleanup
-    ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
+    @Shared
+    String microfetchVersion
 
-    @Shared @Value('${micronaut.application.version}')
-    String version = "0.0.1"
-
-    def setup() {
-        outputStream.reset()
-        errStream.reset()
-        System.setOut(new PrintStream(outputStream))
-        System.setErr(new PrintStream(errStream))
-    }
-
-    def cleanup() {
-        System.setOut(originalOut)
-        System.setErr(originalErr)
+    def setupSpec() {
+        new File('gradle.properties').withInputStream { stream ->
+            gradleProperties.load(stream)
+        }
+        microfetchVersion = gradleProperties.getProperty('microfetchVersion')
     }
 
     def "query version without error"() {
         when:
         String[] args = new String[]{versionArg}
-        PicocliRunner.run(Microfetch, ctx, args)
+        def (outputStream, errStream) = executeCommand(args)
 
         then:
-        outputStream.toString() == "[Microfetch Version $version]${System.lineSeparator()}"
+        outputStream.toString() == "[Microfetch Version $microfetchVersion]${System.lineSeparator()}"
         errStream.toString().isEmpty()
 
         where:
@@ -57,79 +42,80 @@ class MicrofetchCliSpec extends Specification {
         "-v"        | _
     }
 
-    @Unroll
-    def "argument '#distro.toLowerCase()' parses properly as a distro argument"() {
-        when:
-        distro = distro.toLowerCase()
+    def "querying for a linux distro parses from the cli without an error"() {
+        given:
+        String flag = new Random().nextBoolean() ? "--distro" : "--os"
 
-        String[] args = new String[]{"--distro", distro}
-        PicocliRunner.run(Microfetch, ctx, args)
+        when: "using '#flag' flag"
+        String[] args = new String[]{flag, (distro as AsciiEnum).name().toLowerCase()}
+        def (outputStream, errStream) = executeCommand(args)
 
-        then:
+        then: "no error output and output contains appropriate distro"
         !outputStream.toString().isBlank()
+        outputStream.toString().contains(distro.toString())
         errStream.toString().isBlank()
 
         where:
-        distro                              | _
-        AsciiEnum.AIX.name()                | _
-        AsciiEnum.ALMA_LINUX.name()         | _
-        AsciiEnum.ALPINE.name()             | _
-        AsciiEnum.ALPINE_SMALL.name()       | _
-        AsciiEnum.ALTER.name()              | _
-        AsciiEnum.AMAZON.name()             | _
-        AsciiEnum.ANARCHY.name()            | _
-        AsciiEnum.ANDROID.name()            | _
-        AsciiEnum.ANTERGOS.name()           | _
-        AsciiEnum.ANTIX.name()              | _
-        AsciiEnum.AOSC_OS.name()            | _
-        AsciiEnum.AOSC_OS_RETRO.name()      | _
-        AsciiEnum.APERIO_GNU_LINUX.name()   | _
-        AsciiEnum.APRICITY.name()           | _
-        AsciiEnum.ARCH.name()               | _
-        AsciiEnum.ARCH_OLD.name()           | _
-        AsciiEnum.ARCH_SMALL.name()         | _
-        AsciiEnum.ARCH_BOX.name()           | _
-        AsciiEnum.ARCH_CRAFT.name()         | _
-        AsciiEnum.ARCH_LABS.name()          | _
-        AsciiEnum.ARCH_MERGE.name()         | _
-        AsciiEnum.ARCH_STRIKE.name()        | _
-        AsciiEnum.CENTOS.name()             | _
-        AsciiEnum.CENTOS_SMALL.name()       | _
-        AsciiEnum.CUCUMBER.name()           | _
-        AsciiEnum.DEBIAN.name()             | _
-        AsciiEnum.DEBIAN_SMALL.name()       | _
-        AsciiEnum.FEDORA.name()             | _
-        AsciiEnum.FEDORA_OLD.name()         | _
-        AsciiEnum.FEDORA_SMALL.name()       | _
-        AsciiEnum.KALI.name()               | _
-        AsciiEnum.KDE.name()                | _
-        AsciiEnum.KUBUNTU.name()            | _
-        AsciiEnum.LINUX.name()              | _
-        AsciiEnum.LINUX_MINT.name()         | _
-        AsciiEnum.LINUX_MINT_OLD.name()     | _
-        AsciiEnum.LINUXMINT_SMALL.name()    | _
-        AsciiEnum.MAC.name()                | _
-        AsciiEnum.MAC_SMALL.name()          | _
-        AsciiEnum.SUSE.name()               | _
-        AsciiEnum.SUSE_LEAP.name()          | _
-        AsciiEnum.SUSE_SMALL.name()         | _
-        AsciiEnum.SUSE_TUMBLEWEED.name()    | _
-        AsciiEnum.ORACLE.name()             | _
-        AsciiEnum.POP_OS.name()             | _
-        AsciiEnum.RASPBIAN.name()           | _
-        AsciiEnum.RASPBIAN_SMALL.name()     | _
-        AsciiEnum.REDHAT.name()             | _
-        AsciiEnum.REDHAT_OLD.name()         | _
-        AsciiEnum.STEAMOS.name()            | _
-        AsciiEnum.UBUNTU.name()             | _
-        AsciiEnum.UBUNTU_OLD.name()         | _
-        AsciiEnum.UBUNTU_SMALL.name()       | _
-        AsciiEnum.UBUNTU_STUDIO.name()      | _
-        AsciiEnum.UBUNTU_GNOME.name()       | _
-        AsciiEnum.WINDOWS.name()            | _
-        AsciiEnum.WINDOWS_10.name()         | _
-        AsciiEnum.WINDOWS_11.name()         | _
+        distro << AsciiEnum.getEnumConstants()
+    }
+
+    def "querying for an invalid or blank distro prints a default linux image"() {
+        given:
+        String flag = new Random().nextBoolean() ? "--distro" : "--os"
+
+        when: "using '#flag' flag"
+        String[] args = new String[]{flag, distro.toLowerCase()}
+        def (outputStream, errStream) = executeCommand(args)
+
+        then: "no error output and output contains linux distro"
+        !outputStream.toString().isBlank()
+        !outputStream.toString().contains("Exception")
+        outputStream.toString().contains(AsciiEnum.LINUX.toString())
+        errStream.toString().isBlank()
+
+        where:
+        distro         | _
+        ""             | _
+        "Randy Newman" | _
+    }
+
+    def "default distro is appropriate for this os (whatever this os is)"() {
+        given:
+        String osFamily = new SystemInfo().operatingSystem.getFamily()
+        def osMap = [
+                windows: AsciiEnum.WINDOWS,
+                macos:   AsciiEnum.MAC
+        ].withDefault { AsciiEnum.LINUX }
+
+        when: "perform query with no args"
+        def (outputStream, errStream) = executeCommand("")
+
+        then: "no error output"
+        errStream.toString().isBlank()
+        def expectedDistroArt = osMap[osFamily.toLowerCase()].toString()
+
+        and: "#os distro art is returned"
+        outputStream.toString().contains(expectedDistroArt)
 
     }
-}
 
+    /**
+     * Execute a command with the given arguments and return a pair of streams as stdout and stderr.
+     *
+     * This method captures the stdout and stderr, runs the command using the PicocliRunner,
+     * and then returns the output streams.
+     *
+     * @param args the arguments to pass to the command
+     * @return an array containing the output stream and error stream
+     */
+    String[] executeCommand(String... args) {
+        OutputStream out = new ByteArrayOutputStream()
+        OutputStream err = new ByteArrayOutputStream()
+        System.setOut(new PrintStream(out))
+        System.setErr(new PrintStream(err))
+        try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
+            PicocliRunner.run(Microfetch.class, ctx, args)
+        }
+        return new String[]{out, err}
+    }
+}

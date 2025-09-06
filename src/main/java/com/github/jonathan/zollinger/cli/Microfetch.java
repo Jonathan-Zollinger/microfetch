@@ -1,12 +1,14 @@
 package com.github.jonathan.zollinger.cli;
 
-import com.github.jonathan.zollinger.cli.util.AsciiEnumTypeConverter;
 import com.github.jonathan.zollinger.cli.util.MicrofetchVersionProvider;
+import com.github.jonathan.zollinger.cli.util.OperatingSystem;
 import com.github.jonathan.zollinger.model.AsciiEnum;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 import java.util.Arrays;
 
@@ -18,20 +20,40 @@ public class Microfetch implements Runnable {
     @Option(names = {"--distro", "--os"},
             description = "OS or linux distro",
             converter = AsciiEnumTypeConverter.class)
-    AsciiEnum distro = AsciiEnum.LINUX;
+    AsciiEnum distro;
 
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
+
+    @Parameters(index = "0", arity = "0..1", hidden = true)
+    private String ignored;
 
     public static void main(String[] args) {
         PicocliRunner.run(Microfetch.class, args);
     }
 
+    @Override
     public void run() {
         if (version) {
             System.out.println(Arrays.toString(versionProvider.getVersion()));
-        }else {
+        } else {
+            if (null == distro) {
+                distro = OperatingSystem.getOsFamily();
+            }
             System.out.println(distro);
+        }
+    }
+
+    /**
+     * Converts string to ascii enum object. If no match is found, default to linux
+     */
+    static class AsciiEnumTypeConverter implements ITypeConverter<AsciiEnum> {
+        @Override
+        public AsciiEnum convert(String string) {
+            return Arrays.stream(AsciiEnum.values())
+                    .filter(thistro -> thistro.name().equalsIgnoreCase(string))
+                    .findFirst()
+                    .orElse(AsciiEnum.LINUX);
         }
     }
 }
