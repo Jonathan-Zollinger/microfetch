@@ -1,6 +1,4 @@
-package com.github.jonathan.zollinger.cli.util;
-
-import com.github.jonathan.zollinger.model.AsciiEnum;
+package com.github.jonathan.zollinger.model;
 
 import java.util.Locale;
 

@@ -1,7 +1,7 @@
 package com.github.jonathan.zollinger.cli;
 
 import com.github.jonathan.zollinger.cli.util.MicrofetchVersionProvider;
-import com.github.jonathan.zollinger.cli.util.OperatingSystem;
+import com.github.jonathan.zollinger.model.OperatingSystem;
 import com.github.jonathan.zollinger.model.AsciiEnum;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import jakarta.inject.Inject;
