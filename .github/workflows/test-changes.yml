@@ -1,11 +1,9 @@
-name: Graalvm test and build with Gradle
-
+name: test, build and scan
 on:
-  push:
-    branches: [ main, v*, release/* ]
   pull_request:
-    branches: [ main, v*, release/* ]
-
+    branches:
+      - "main"
+      - "[0-9]+.[0-9]+.[0-9]+"
 permissions:
   contents: read
 jobs:
@@ -13,41 +11,34 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest] # unsupported by 1password atm https://github.com/1Password/load-secrets-action/issues/46
+        os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v4
-    - name: Load secrets from 1Password
-      uses: 1Password/load-secrets-action@v2.0.0
-      id: OPassword-credentials
-      with:
-        export-env: true
-      env:
-        OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_GHACTIONS_SA_TOKEN }}
-        GITHUB_TOKEN: op://gh/microfetch_graalvm/credential
-    - name: Set up JDK 21
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: '21'
-        distribution: 'graalvm-community'
-        github-token: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
-        native-image-job-reports: 'true'
-        native-image-pr-reports: 'true'
-    - name: test and build on ${{ matrix.os }}
-      run: ./gradlew nativeCompile
-    - if: runner.os == 'ubuntu'
-      run: echo -e "#! /usr/bin/env bash \n/home/runner/work/microfetch/microfetch/build/native/nativeCompile/microfetch" >> microfetch
-    - if: runner.os == 'ubuntu'
-      uses: charmbracelet/vhs-action@v1
-      with:
-        path: 'src/docs/example.tape'
-    - if: runner.os == 'ubuntu'
-      uses: stefanzweifel/git-auto-commit-action@v4
-      env:
-        GITHUB_TOKEN: ${{ steps.OPassword-credentials.outputs.GITHUB_TOKEN }}
-      with:
-        commit_message: Update generated VHS GIF
-        branch: main
-        commit_user_name: vhs-action 📼
-        commit_user_email: actions@github.com
-        commit_author: vhs-action 📼 <actions@github.com>
-        file_pattern: '*.gif'
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
+        with:
+          fetch-depth: 0 # SonarCloud needs a full history to assign issues correctly
+      - name: Set up JDK 21
+        uses: graalvm/setup-graalvm@7a1da54cb7fdef4ea19f6ecdfa9ecf59dc5a48fe
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          native-image-job-reports: 'true'
+          native-image-pr-reports: 'true'
+      - name: test, build and scan on Ubuntu
+        if: ${{matrix.os]] == 'ubuntu-latest'
+        run: ./gradlew build sonar nativeCompile --info
+      - name: test and build on ${{ matrix.os }}
+        if: ${{matrix.os]] != 'ubuntu-latest'
+        run: ./gradlew test nativeCompile
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
+      - name: Set up JDK 21
+        uses: graalvm/setup-graalvm@7a1da54cb7fdef4ea19f6ecdfa9ecf59dc5a48fe # 1.3.6
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
