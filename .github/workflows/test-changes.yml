@@ -24,10 +24,10 @@ jobs:
           native-image-job-reports: 'true'
           native-image-pr-reports: 'true'
       - name: test, build and scan on Ubuntu
-        if: ${{matrix.os]] == 'ubuntu-latest'
+        if: ${{matrix.os}} == 'ubuntu-latest'
         run: ./gradlew build sonar nativeCompile --info
       - name: test and build on ${{ matrix.os }}
-        if: ${{matrix.os]] != 'ubuntu-latest'
+        if: ${{matrix.os}} != 'ubuntu-latest'
         run: ./gradlew test nativeCompile
   dependency-submission:
     runs-on: ubuntu-latest
