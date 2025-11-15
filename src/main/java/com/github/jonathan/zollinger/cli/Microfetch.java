@@ -17,6 +17,7 @@ import java.util.Arrays;
 public class Microfetch implements Runnable {
     @Inject
     MicrofetchVersionProvider versionProvider;
+
     @Option(names = {"--distro", "--os"},
             description = "OS or linux distro",
             converter = AsciiEnumTypeConverter.class)
