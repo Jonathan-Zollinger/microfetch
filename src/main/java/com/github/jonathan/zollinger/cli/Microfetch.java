@@ -2,13 +2,14 @@ package com.github.jonathan.zollinger.cli;
 
 import com.github.jonathan.zollinger.cli.util.MicrofetchVersionProvider;
 import com.github.jonathan.zollinger.model.AsciiEnum;
-import com.github.jonathan.zollinger.model.OperatingSystem;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
 
 import java.util.Arrays;
+
+import static com.github.jonathan.zollinger.model.OperatingSystem.getOsFamily;
 
 @Command(name = "microfetch",
         description = "System info tool written with Java, built with graalvm",
@@ -32,7 +33,7 @@ public class Microfetch implements Runnable {
 
 
     /**
-     * Converts string to ascii enum object. If no match is found, default to linux
+     * Converts string to ascii enum object. If no match is found, default to querying this OS
      */
     static class AsciiEnumTypeConverter implements ITypeConverter<AsciiEnum> {
         @Override
@@ -40,7 +41,7 @@ public class Microfetch implements Runnable {
             return Arrays.stream(AsciiEnum.values())
                     .filter(thistro -> thistro.name().equalsIgnoreCase(string))
                     .findFirst()
-                    .orElse(OperatingSystem.getOsFamily());
+                    .orElse(getOsFamily());
         }
     }
 }
