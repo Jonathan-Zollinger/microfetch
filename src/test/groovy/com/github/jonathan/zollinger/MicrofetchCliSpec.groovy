@@ -28,32 +28,32 @@ class MicrofetchCliSpec extends Specification {
 
     def "query version without error"() {
         when:
-        String[] args = new String[]{versionArg}
+        String[] args = new String[]{"microfetch", versionArg}
         def (outputStream, errStream) = executeCommand(args)
 
         then:
-        outputStream.toString() == "[Microfetch Version $microfetchVersion]${System.lineSeparator()}"
-        errStream.toString().isEmpty()
+        verifyAll {
+            outputStream.toString() == "Microfetch Version $microfetchVersion${System.lineSeparator()}"
+            errStream.toString().isEmpty()
+        }
 
         where:
         versionArg  | _
         "--version" | _
-        "version"   | _
-        "-v"        | _
+        "-V"        | _
     }
 
     def "querying for a linux distro parses from the cli without an error"() {
-        given:
-        String flag = new Random().nextBoolean() ? "--distro" : "--os"
-
-        when: "using '#flag' flag"
-        String[] args = new String[]{flag, (distro as AsciiEnum).name().toLowerCase()}
+        when:
+        String[] args = new String[]{(distro as AsciiEnum).name().toLowerCase()}
         def (outputStream, errStream) = executeCommand(args)
 
         then: "no error output and output contains appropriate distro"
-        !outputStream.toString().isBlank()
-        outputStream.toString().contains(distro.toString())
-        errStream.toString().isBlank()
+        verifyAll {
+            !outputStream.toString().isBlank()
+            outputStream.toString().contains(distro.toString())
+            errStream.toString().isBlank()
+        }
 
         where:
         distro << AsciiEnum.getEnumConstants()
@@ -61,46 +61,33 @@ class MicrofetchCliSpec extends Specification {
 
     def "querying for an invalid or blank distro prints a default linux image"() {
         given:
-        String flag = new Random().nextBoolean() ? "--distro" : "--os"
+        String[] args = new String[]{ distro.toLowerCase() }
+        String osFamily = new SystemInfo().operatingSystem.getFamily()
+        def osMap = [
+                windows: AsciiEnum.WINDOWS,
+                macos  : AsciiEnum.MAC
+        ].withDefault { AsciiEnum.LINUX }
 
-        when: "using '#flag' flag"
-        String[] args = new String[]{flag, distro.toLowerCase()}
+        when:
         def (outputStream, errStream) = executeCommand(args)
 
-        then: "no error output and output contains linux distro"
-        !outputStream.toString().isBlank()
-        !outputStream.toString().contains("Exception")
-        outputStream.toString().contains(AsciiEnum.LINUX.toString())
-        errStream.toString().isBlank()
-
+        then: "no error output and standard output is appropriate distro for this os (whatever this os is)"
+        verifyAll {
+            !outputStream.toString().isBlank()
+            !outputStream.toString().contains("Exception")
+            outputStream.toString().contains(osMap[osFamily.toLowerCase()].toString())
+            errStream.toString().isBlank()
+        }
         where:
         distro         | _
         ""             | _
         "Randy Newman" | _
     }
 
-    def "default distro is appropriate for this os (whatever this os is)"() {
-        given:
-        String osFamily = new SystemInfo().operatingSystem.getFamily()
-        def osMap = [
-                windows: AsciiEnum.WINDOWS,
-                macos:   AsciiEnum.MAC
-        ].withDefault { AsciiEnum.LINUX }
-
-        when: "perform query with no args"
-        def (outputStream, errStream) = executeCommand("")
-
-        then: "no error output"
-        errStream.toString().isBlank()
-        def expectedDistroArt = osMap[osFamily.toLowerCase()].toString()
-
-        and: "#os distro art is returned"
-        outputStream.toString().contains(expectedDistroArt)
-
-    }
-
     /**
      * Execute a command with the given arguments and return a pair of streams as stdout and stderr.
+     *
+     * This requires that the command be included in the args, ie "microfetch", as well as "windows"
      *
      * This method captures the stdout and stderr, runs the command using the PicocliRunner,
      * and then returns the output streams.
