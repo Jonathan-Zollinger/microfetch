@@ -579,7 +579,7 @@ ${c2}                         ..${c1}
             :cccccccccccccccccccccccccccc:'.
             .:cccccccccccccccccccccc:;,..
               '::cccccccccccccc::;,.
-                        """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
+            """, new Attribute[][]{new Attribute[]{BLUE_TEXT(), WHITE_TEXT()}}),
 
     FEDORA_OLD("""
             ${c1}          /:-------------:\\
@@ -739,7 +739,7 @@ ${c2}                         ..${c1}
                   `/dMNmy+/:-------------:/yMMM
                      ./ydNMMMMMMMMMMMMMMMMMMMMM
                         .MMMMMMMMMMMMMMMMMMM
-             """, new Attribute[][]{new Attribute[]{
+            """, new Attribute[][]{new Attribute[]{
             GREEN_TEXT(), TEXT_COLOR(7)}}),
     LINUXMINT_SMALL("""
             ${c1} ___________
@@ -812,7 +812,7 @@ ${c2}                         ..${c1}
                  'l0Kk:.              .;xK0l'
                     'lkK0xl:;,,,,;:ldO0kl'
                         '^:ldxkkkkxdl:^'
-                        """, new Attribute[][]{new Attribute[]{GREEN_TEXT(), WHITE_TEXT()}}),
+            """, new Attribute[][]{new Attribute[]{GREEN_TEXT(), WHITE_TEXT()}}),
 
     SUSE_LEAP("""
             ${c1}                 `-++:`
@@ -831,7 +831,7 @@ ${c2}                         ..${c1}
                          ./oooooooooo/.
                             -/oooo+:`
                               `:/.
-                        """, new Attribute[][]{new Attribute[]{GREEN_TEXT()}}),
+            """, new Attribute[][]{new Attribute[]{GREEN_TEXT()}}),
 
     SUSE_SMALL("""
             ${c1}  _______
@@ -857,7 +857,7 @@ ${c2}                         ..${c1}
                oWMO:.    .;xNMMk,       NNNMKl.          .xWMx
                  :ONMMNXMMMKx;          .  ,xNMWKkxllox0NMWk,
                      .....                    .:dOOXXKOxl,
-                        """, new Attribute[][]{new Attribute[]{WHITE_TEXT()}}),
+            """, new Attribute[][]{new Attribute[]{WHITE_TEXT()}}),
 
     ORACLE("""
             ${c1}
@@ -999,7 +999,7 @@ ${c2}                         ..${c1}
                   '*##################*'
                      ''*##########*''
                           ''''''
-                        """, new Attribute[][]{
+            """, new Attribute[][]{
             new Attribute[]{WHITE_TEXT(), BLUE_TEXT()}
     }),
 
@@ -1176,6 +1176,8 @@ ${c2}                         ..${c1}
     final String distroArt;
     final Pattern interpolator = Pattern.compile("(\\$\\{c\\d+})");
     final Pattern easyLineSep = Pattern.compile("\r\n?|\n");
+    int widestLength = 0;
+    LinkedHashMap<String, String> properties;
 
     Attribute[][] palette;
 
