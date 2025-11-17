@@ -3,10 +3,7 @@ package com.github.jonathan.zollinger.model;
 import com.diogonunes.jcolor.Attribute;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -1194,11 +1191,8 @@ ${c2}                         ..${c1}
         while (matcher.find()) {
             colorPositions.add(Integer.parseInt(matcher.group(1).replaceAll("\\D", "")));
         }
-        Optional<Integer> maxValue = colorPositions.stream().max((spam, eggs) -> spam.compareTo(eggs));
-        if (maxValue.isEmpty()) {
-            return 0;
-        }
-        return maxValue.get();
+        Optional<Integer> maxValue = colorPositions.stream().max(Integer::compareTo);
+        return maxValue.orElse(0);
     }
 
     public void setPalette(Attribute[][] palette) {
@@ -1229,7 +1223,7 @@ ${c2}                         ..${c1}
     /**
      * formats a given string per {@link #palette}.
      *
-     * @param text String which may have none, one or many formatting placeholders {@code ie ${c1}}.
+     * @param text a multiline String which may have none, one or many formatting placeholders {@code ie ${c1}}.
      * @return String rendered per format placeholder numbers and color palette.
      */
     public String render(String text, int paletteSelection) {
