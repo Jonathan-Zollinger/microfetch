@@ -2,6 +2,7 @@ package com.github.jonathan.zollinger.cli;
 
 import com.github.jonathan.zollinger.cli.util.MicrofetchVersionProvider;
 import com.github.jonathan.zollinger.model.AsciiEnum;
+import com.github.jonathan.zollinger.model.Statistics;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
@@ -28,6 +29,7 @@ public class Microfetch implements Runnable {
 
     @Override
     public void run() {
+        distro.setProperties(new Statistics());
         System.out.println(distro);
     }
 

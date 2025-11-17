@@ -1,6 +1,8 @@
 package com.github.jonathan.zollinger.model;
 
 import com.diogonunes.jcolor.Attribute;
+import lombok.Getter;
+import lombok.Setter;
 import picocli.CommandLine;
 
 import java.util.*;
@@ -1176,7 +1178,8 @@ public enum AsciiEnum {
     final Pattern interpolator = Pattern.compile("(\\$\\{c\\d+})");
     final Pattern easyLineSep = Pattern.compile("\r\n?|\n");
     int widestLength = 0;
-    LinkedHashMap<String, String> properties;
+    @Setter @Getter
+    Statistics properties;
 
     Attribute[][] palette;
 
@@ -1197,7 +1200,6 @@ public enum AsciiEnum {
     }
 
     public void setPalette(Attribute[][] palette) {
-        Matcher matcher = interpolator.matcher(distroArt);
         if (palette[0].length < getColorCount()) {
             throw new CommandLine.PicocliException(
                     String.format("provided color palette doesn't have enough colors\n(needs %d but found %d)\n%s",
@@ -1206,6 +1208,20 @@ public enum AsciiEnum {
                             this.distroArt));
         }
         this.palette = palette;
+    }
+
+    public int getWidestLength() {
+        if (widestLength == 0) {
+            String ansiPattern = Pattern.quote("[") + Pattern.compile("\\d+m");
+            Arrays.stream(this.toString().split(easyLineSep.pattern())).forEach(it -> {
+                        int thisLength = it.replaceAll(ansiPattern, "").length();
+                        if (thisLength > widestLength) {
+                            widestLength = thisLength;
+                        }
+                    }
+            );
+        }
+        return widestLength;
     }
 
     int validatePaletteSelection(int selection) {
