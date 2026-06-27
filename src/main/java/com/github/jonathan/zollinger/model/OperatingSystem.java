@@ -1,7 +1,5 @@
 package com.github.jonathan.zollinger.model;
 
-import java.util.Locale;
-
 import static com.github.jonathan.zollinger.model.AsciiEnum.*;
 import static java.util.Locale.ENGLISH;
 
