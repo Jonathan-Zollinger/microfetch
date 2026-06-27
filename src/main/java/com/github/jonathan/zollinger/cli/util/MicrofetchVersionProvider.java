@@ -2,10 +2,10 @@ package com.github.jonathan.zollinger.cli.util;
 
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
-import picocli.CommandLine;
+import picocli.CommandLine.IVersionProvider;
 
 @Singleton
-public class MicrofetchVersionProvider implements CommandLine.IVersionProvider {
+public class MicrofetchVersionProvider implements IVersionProvider {
 
     @Value("${micronaut.application.version}")
     String version;

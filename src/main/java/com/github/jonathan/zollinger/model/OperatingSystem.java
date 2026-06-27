@@ -2,6 +2,9 @@ package com.github.jonathan.zollinger.model;
 
 import java.util.Locale;
 
+import static com.github.jonathan.zollinger.model.AsciiEnum.*;
+import static java.util.Locale.ENGLISH;
+
 public final class OperatingSystem {
 
     private OperatingSystem() {
@@ -24,11 +27,11 @@ public final class OperatingSystem {
      * @return The {@link AsciiEnum} corresponding to the detected OS family (e.g., {@code MAC}, {@code WINDOWS}, or {@code LINUX}).
      */
     public static AsciiEnum getOsFamily() {
-        final String osName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        final String osName = System.getProperty("os.name").toLowerCase(ENGLISH);
         return switch (osName) {
-            case String s when s.startsWith("mac") || s.startsWith("darwin") -> AsciiEnum.MAC;
-            case String s when s.contains("windows") -> AsciiEnum.WINDOWS;
-            default -> AsciiEnum.LINUX; 
+            case String os when os.startsWith("mac") || os.startsWith("darwin") -> MAC;
+            case String os when os.contains("windows") -> WINDOWS;
+            default -> LINUX;
         };
     }
 }

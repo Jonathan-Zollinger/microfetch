@@ -533,7 +533,7 @@ public enum AsciiEnum {
     DEBIAN("""
             ${c2}       _,met$$$$$gg.
                 ,g$$$$$$$$$$$$$$$P.
-              ,g$$P"        ""\"Y$$.".
+              ,g$$P"        \"""Y$$.".
              ,$$P'              `$$$.
             ',$$P       ,ggs.     `$$b:
             `d$$'     ,$P"'   ${c1}.${c2}    $$$
@@ -547,7 +547,7 @@ public enum AsciiEnum {
                  `$$b.
                    `Y$$b.
                       `"Y$b._
-                          `""\"
+                          `\"""
             """, new Attribute[][]{new Attribute[]{
             RED_TEXT(),
             TEXT_COLOR(7)}}),
@@ -1199,10 +1199,10 @@ public enum AsciiEnum {
         return maxValue.orElse(0);
     }
 
-    public void setPalette(Attribute[][] palette) {
+    void setPalette(Attribute[][] palette) {
         if (palette[0].length < getColorCount()) {
             throw new CommandLine.PicocliException(
-                    String.format("provided color palette doesn't have enough colors\n(needs %d but found %d)\n%s",
+                    String.format("provided color palette doesn't have enough colors%n(needs %d but found %d)%n%s",
                             getColorCount(),
                             palette[0].length,
                             this.distroArt));
@@ -1229,7 +1229,7 @@ public enum AsciiEnum {
             throw new CommandLine.PicocliException("color palette selection can not be assigned with null-valued palette");
         } else if (palette[0].length <= selection) {
             throw new CommandLine.PicocliException(
-                    String.format("color palette selection \"%d\" invalid for palette of length %d in the following image:\n%s",
+                    String.format("color palette selection \"%d\" invalid for palette of length %d in the following image:%n%s",
                             selection,
                             palette[0].length,
                             this.distroArt));
